@@ -1,0 +1,28 @@
+services:
+  app:
+    image: bigcatbosstodo  # 使用當前目錄下的 Dockerfile 構建映像
+    ports:
+      - "8008:8008"  # 將容器的 8008 端口映射到本地的 8008 端口
+    depends_on:
+      - db  # 依賴於 db 服務，確保 db 服務先啟動
+    environment:
+      DB_HOST: db  # 資料庫主機名稱（與服務名稱一致）
+      DB_USER: root  # 資料庫用戶名
+      DB_PASSWORD: ppassword  # 資料庫密碼
+      DB_NAME: todo  # 資料庫名稱
+      DB_PORT: 3307  # 資料庫端口
+
+  db:
+    image: mysql:8.0  # 使用 MySQL 8.0 映像
+    environment:
+      MYSQL_ROOT_PASSWORD: ppassword  # 設置 root 用戶的密碼
+      MYSQL_DATABASE: todo  # 自動創建資料庫
+      MYSQL_USER: user  # 創建一個新用戶
+      MYSQL_PASSWORD: ppassword  # 設置新用戶的密碼
+    ports:
+      - "3307:3307"  # 將容器的 3306 端口映射到本地的 3307 端口
+    volumes:
+      - mysql_data:/var/lib/mysql  # 將 MySQL 數據存儲在本地卷中
+
+volumes:
+  mysql_data:  # 定義一個名為 mysql_data 的卷
